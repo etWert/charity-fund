@@ -8,7 +8,7 @@ const EmployeesList = () => {
     const [deleteEmployee, { isSuccess: isDeleteSuccess ,isError:isDeleteEror}] = useDeleteEmployeeMutation()
     const deleteClick = (employee) => {
         if (window.confirm("האם אתה בטוח שברצונך למחוק את העובד")) {
-            deleteEmployee({ _id: employee._id })
+            deleteEmployee({ id: employee._id })
         }
     }
 

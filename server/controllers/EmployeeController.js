@@ -122,9 +122,20 @@ const updateEmployee = async (req, res) => {
 const deleteEmployee = async (req, res) => {
     const { id } = req.body
     if (!id) {
-        return res.status(404).send("ID is required")
+        return res.status(400).res.json({
+            error: true,
+            message: "ID is required",
+            data: null
+        })
     }
     const employee = await Employee.findById(id).exec()
+    if(!employee){
+        return res.json({
+            error: true,
+            message: "no employee found",
+            data: null
+        })
+    }
     const deletedEmployee = await employee.deleteOne()
     res.json({
         error: false,

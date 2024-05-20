@@ -21,8 +21,10 @@ const FamiliesList = () => {
     const namesArr = q && q.split(" ")
 
     familiesObj.data.forEach(family => {
-        console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name === namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
-        console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name, namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
+        if (namesArr) {
+            console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name === namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
+            console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name, namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
+        }
     });
 
     const filteredData = !q ? [...familiesObj.data] : familiesObj.data.filter(family =>

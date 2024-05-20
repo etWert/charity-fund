@@ -6,8 +6,10 @@ import useGetFilePath from "../../../hooks/useGetFilePath"
 
 const FamiliesList = () => {
     const { data: familiesObj, isError, error, isLoading } = useGetAllFamiliesQuery()
+
     const [searchParams] = useSearchParams()
     const q = searchParams.get("q")
+
     const { getFilePath } = useGetFilePath()
     if (isLoading)
         return <h1>Loading...</h1>
@@ -15,7 +17,19 @@ const FamiliesList = () => {
         return <h1>{JSON.stringify(error)}</h1>
 
     //להוסיף תנאים לפילטור (שם הבעל,האשה וכו)
-    const filteredData = !q ? [...familiesObj.data] : familiesObj.data.filter(family => family.familyName.indexOf(q) > -1)
+    console.log(familiesObj);
+    const namesArr = q && q.split(" ")
+
+    familiesObj.data.forEach(family => {
+        console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name === namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
+        console.log(family.name + " " + family.parent1.first_name + " " + family.parent2.first_name, namesArr[0] + " " + namesArr[1] + " " + namesArr[2])
+    });
+
+    const filteredData = !q ? [...familiesObj.data] : familiesObj.data.filter(family =>
+        family.name.indexOf(q) > -1 ||
+        family.parent1.first_name.indexOf(q) > -1 ||
+        family.parent2.first_name.indexOf(q) > -1
+    )
 
     return (
         <div className="families-list">

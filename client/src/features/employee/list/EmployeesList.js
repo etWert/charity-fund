@@ -21,6 +21,7 @@ const EmployeesList = () => {
         return <h1>{JSON.stringify(error)}helllo</h1>
 
     const filteredData = !q ? [...employeesObj.data] : employeesObj.data.filter(emp => emp.name.indexOf(q) > -1)
+    
     return (
         <div className="employees-list">
             <div className="employees-list-top">

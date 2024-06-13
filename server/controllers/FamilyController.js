@@ -1,3 +1,4 @@
+const Employee = require("../models/Employee")
 const Family = require("../models/Family")
 const bcrypt = require("bcrypt")
 
@@ -36,7 +37,10 @@ const getFamilyById = async (req, res) => {
 
 const addFamily = async (req, res) => {
     const tzFile = (req.file?.filename ? req.file.filename : "")
+    
     const { employee, name, username, password, address, phone, email, marital_status, bank_details, parent1, parent2, child } = req.body
+    console.log(employee);
+    console.log(typeof(employee));
     if (!name || !password || !username || !marital_status || !bank_details) {
         return res.status(400).json({
             error: true,
@@ -45,7 +49,10 @@ const addFamily = async (req, res) => {
         })
     }
     const hashPassword = await bcrypt.hash(password, 10)
-    const duplicate = await Family.findOne({ username }).lean()
+    let duplicate = await Family.findOne({ username }).lean()
+    if (!duplicate) {
+        duplicate = await Employee.findOne({ username }).lean()
+    }
     if (duplicate) {
         return res.status(409).json({
             error: true,
@@ -64,12 +71,17 @@ const addFamily = async (req, res) => {
     res.json({
         error: false,
         message: "The family was successfully added",
-        data: {username:family.username,_id:family._id}
+        data: { username: family.username, _id: family._id }
     })
 }
 const updateFamily = async (req, res) => {
     const tzFile = (req.file?.filename ? req.file.filename : "")
+    console.log("444444444444");
+    console.log(req.body);
+    console.log("44444444444444444");
+    
     const { id, employee, name, username, password, address, phone, email, marital_status, bank_details, parent1, parent2, child } = req.body
+    console.log(id);
     if (!id) {
         return res.status(404).send("ID is required")
     }
@@ -128,7 +140,7 @@ const updateFamily = async (req, res) => {
     res.json({
         error: false,
         message: "The family was successfully updeted",
-        data: {username:updateFamily.username,_id:updateFamily._id}
+        data: { username: updateFamily.username, _id: updateFamily._id }
     })
 
 }

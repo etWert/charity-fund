@@ -4,15 +4,18 @@ import { useNavigate } from "react-router-dom";
 
 import "./sidebar.css"
 import MenuLink from "./MenuLink"
-// import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
+import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 import useAuth from "../../hooks/useAuth";
 
 const SideBar = () => {
-    const { username, fullname, role } = useAuth()
-    // const [logout, { isSuccess }] = useSendLogoutMutation()
+
+
+    const { username, fullname, role, _id} = useAuth()
+    const [logout, { isSuccess }] = useSendLogoutMutation()
     const navigate = useNavigate()
 
-    const adminMenuItems = [
+
+    const employeeMenuItems = [
         {
             title: "דפים",
             list: [
@@ -31,8 +34,11 @@ const SideBar = () => {
                     icon: <MdSearch />,
                 }, {
                     title: "מנהלים",
-                    //******************
-                    path: "/dash/employees/admin",
+                    path: "/dash/admins",
+                    icon: <MdSearch />,
+                }, {
+                    title: "עדכון פרטים אישיים",
+                    path: role==="נציג"?`/dash/employees/${_id}`:`/dash/admins/${_id}`,
                     icon: <MdSearch />,
                 },
             ]
@@ -54,39 +60,39 @@ const SideBar = () => {
 
 
         }]
-    const employeeMenuItems = [
-        {
-            title: "דפים",
-            list: [
-                {
-                    title: "ראשי",
-                    path: "/dash",
-                    icon: <MdSearch />,
-                },
-                {
-                    title: "משפחות",
-                    path: "/dash/families",
-                    icon: <MdSearch />,
-                }
-            ]
-        },
-        {
-            title: "משתמשים",
-            list: [
-                {
-                    title: "הגדרות",
-                    path: "/dash/settings",
-                    icon: <MdSearch />,
-                },
-                {
-                    title: "עזרה",
-                    path: "/dash/help",
-                    icon: <MdSearch />,
-                },
-            ]
+    // const employeeMenuItems = [
+    //     {
+    //         title: "דפים",
+    //         list: [
+    //             {
+    //                 title: "ראשי",
+    //                 path: "/dash",
+    //                 icon: <MdSearch />,
+    //             },
+    //             {
+    //                 title: "משפחות",
+    //                 path: "/dash/families",
+    //                 icon: <MdSearch />,
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         title: "משתמשים",
+    //         list: [
+    //             {
+    //                 title: "הגדרות",
+    //                 path: "/dash/settings",
+    //                 icon: <MdSearch />,
+    //             },
+    //             {
+    //                 title: "עזרה",
+    //                 path: "/dash/help",
+    //                 icon: <MdSearch />,
+    //             },
+    //         ]
 
 
-        }]
+    //     }]
     const familyMenuItems = [
         {
             title: "דפים",
@@ -95,6 +101,10 @@ const SideBar = () => {
                     title: "ראשי",
                     path: "/dash",
                     icon: <MdSearch />,
+                }, {
+                    title: "עדכון פרטים אישיים",
+                    path: `/dash/families/${_id}`,
+                    icon: <MdSearch />,
                 }
             ]
         },
@@ -116,11 +126,19 @@ const SideBar = () => {
 
         }]
 
-    const menuItems = role === "מנהל" ? adminMenuItems : (role === "נציג" ? employeeMenuItems : familyMenuItems)
+
+
+    const menuItems = role === "מנהל" || role === "נציג" ? employeeMenuItems : familyMenuItems
   
+        // useEffect(()=>{
+        //     if(isSuccess){
+        //         navigate("/login")
+
+        //     }
+        // },[isSuccess])
 
     const logoutClick = () => {
-        //logout()
+        logout()
         navigate("/login")
 
     }

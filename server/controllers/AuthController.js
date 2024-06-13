@@ -13,18 +13,14 @@ const login = async (req, res) => {
             data: null
         })
     }
-    let foundUser
-    if (password === process.env.EMPLOYEE_PASSWORD) {
+    let foundUser = await Family.findOne({ username: username }).populate("employee", { name: 1 }).lean()
+    if (!foundUser) {
         foundUser = await Employee.findOne({ username: username })
-    }
-    else {
-        foundUser = await Family.findOne({ username: username }).populate("employee", { name: 1 })
     }
     if (!foundUser) {
         return res.status(401).json({
             error: true,
-            ////////////////////////////
-            message: "Unauthorized-משתמש לא רשום",
+            message: "משתמש לא רשום",
             data: null
         })
     }
@@ -34,87 +30,102 @@ const login = async (req, res) => {
     if (!match) {
         return res.status(401).json({
             error: true,
-            message: "Unauthorized-השוואת הסיסמא לסיסמה המקודדת",
-            ////////////////////////////
+            message: "משתמש לא רשום",
             data: null
         })
     }
 
     // token
-    const UserInfo = {
+    const userInfo = {
         _id: foundUser._id,
         username: foundUser.username,
         name: foundUser.name,
         role: foundUser.role
     }
 
-    const accessToken = jwt.sign(UserInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+
+    const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+
+    const refreshToken = jwt.sign({ username: foundUser.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
+
     console.log(accessToken);
-    // res.cookie("jwt", refreshToken, {
-    //     httpOnly: true,
-    //     maxAge: 7 * 24 * 60 * 60 * 1000
-    // })
+    res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+
+
+
 
     res.json({ accessToken })
 
 }
 
-// const refresh = async (req, res) => {
-//     const cookies = req.cookies
-//     //jwt או שהוא ריק או שאין לו את
-//     if (!cookies?.jwt) {
-//         return res.status(401).json({
-//             error: true,
-//             message: "Unauthorized",
-//             data: null
-//         })
-//     }
-//     const refreshToken = cookies.jwt
-//     jwt.verify(refreshToken,
-//         process.env.REFRESH_TOKEN_SECRET,
-//         async (err, decode) => {
-//             if (err) {
-//                 return res.status(403).json({
-//                     error: true,
-//                     message: "Forbidden",
-//                     data: null
-//                 })
-//             }
-//             const foundUser = await Family.findOne({ username: decode.username/*,ניתן להוסיף כאן תנאים נוספים כגון פעיל/ נמחק וכו */ }).populate("employee", { name: 1/*ניתן להוסיף שדות להצגה או הסתרה */ })
-//             const UserInfo = {
-//                 _id: foundUser._id,
-//                 username: foundUser.username,
-//                 familyName: foundUser.familyName,
-//                 husband: foundUser.husband,
-//                 wife: foundUser.wife,
-//                 role: foundUser.role
-//             }
+const refresh = async (req, res) => {
+    const cookies = req.cookies
+    if (!cookies?.jwt) {
+        return res.status(401).json({
+            error: true,
+            message: "משתמש לא רשום",
+            data: null
+        })
+    }
+    const refreshToken = cookies.jwt
+    jwt.verify(refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        async (err, decode) => {
+            if (err) {
+                return res.status(403).json({
+                    error: true,
+                    message: "Forbidden",
+                    data: null
+                })
+            }
+            let foundUser = await Family.findOne({ username: decode.username }).populate("employee", { name: 1/*,phone:1*/ })
+            if (!foundUser) {
+                foundUser = await Employee.findOne({ username: decode.username })
+            }
+            if (!foundUser) {
+                return res.status(401).json({
+                    error: true,
+                    message: "משתמש לא רשום",
+                    data: null
+                })
+            }
+            const userInfo = {
+                _id: foundUser._id,
+                username: foundUser.username,
+                name: foundUser.name,
+                role: foundUser.role
+            }
 
-//             const accessToken = jwt.sign(UserInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m'/* אומר לכמה זמן הטוקן הטוקן מאושר*/ })
+            const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m'/* אומר לכמה זמן הטוקן הטוקן מאושר*/ })
 
-//             res.json({ accessToken })
-//         })
-// }
+            res.json({ accessToken })
+        })
+}
 
-// //איך אפשר לשמור בעוגיות ללא refreshToken?
-// const logout = async (req, res) => {
-//     const cookies = req.cookies
-//     //jwt או שהוא ריק או שאין לו את
-//     if (!cookies?.jwt) {
-//         //סטטוס של - אין נתונים
-//         return res.status(204).json({
-//             error: true,
-//             message: "NoContent ",
-//             data: null
-//         })
-//     }
-//     res.clearCookie("jwt", {
-//         httpOnly: true
-//     })
-//     res.json({
-//         error: false,
-//         message: "Cookie cleard",
-//         data: null
-//     })
-// }
-module.exports = { login } 
+
+
+//איך אפשר לשמור בעוגיות ללא refreshToken?
+const logout = async (req, res) => {
+    const cookies = req.cookies
+    //jwt או שהוא ריק או שאין לו את
+    if (!cookies?.jwt) {
+        //סטטוס של - אין נתונים
+        return res.status(204).json({
+            error: true,
+            message: "אין נתונים",
+            data: null
+        })
+    }
+    res.clearCookie("jwt", {
+        httpOnly: true
+    })
+    res.json({
+        error: false,
+        message: "Cookie נמחק",
+        data: null
+    })
+}
+module.exports = { login, refresh, logout } 

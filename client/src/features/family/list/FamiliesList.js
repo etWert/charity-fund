@@ -1,11 +1,16 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { useGetAllFamiliesQuery } from "../familiesApiSlice"
+import { useGetAllFamiliesQuery, useUpdateFamilyMutation } from "../familiesApiSlice"
 import "./FamiliesList.css"
 import Search from "../../../components/search/Search"
 import useGetFilePath from "../../../hooks/useGetFilePath"
+import useAuth from "../../../hooks/useAuth"
+import { useGetAllEmployeesQuery } from "../../employee/employeesApiSlice"
 
 const FamiliesList = () => {
+    const { role, _id } = useAuth()
+    const { data: employeesObj } = useGetAllEmployeesQuery()
     const { data: familiesObj, isError, error, isLoading } = useGetAllFamiliesQuery()
+    const [updateFamily, { isSuccess: isUpdateSuccess }] = useUpdateFamilyMutation()
 
     const [searchParams] = useSearchParams()
     const q = searchParams.get("q")
@@ -15,6 +20,11 @@ const FamiliesList = () => {
         return <h1>Loading...</h1>
     if (isError)
         return <h1>{JSON.stringify(error)}</h1>
+
+    const handleUpdateFamily = (event, family) => {
+        const employeeId = event.target.value;
+        updateFamily({ ...family, employee:employeeId });
+    };
 
     //להוסיף תנאים לפילטור (שם הבעל,האשה וכו)
     console.log(familiesObj);
@@ -27,13 +37,19 @@ const FamiliesList = () => {
         }
     });
 
-    const filteredData = !q ? [...familiesObj.data] : familiesObj.data.filter(family =>
+    let filteredData = !q ? [...familiesObj.data] : familiesObj.data.filter(family =>
         family.name.indexOf(q) > -1 ||
         family.parent1.first_name.indexOf(q) > -1 ||
         family.parent2.first_name.indexOf(q) > -1
     )
 
+
+    if (role == "נציג") {
+        filteredData = filteredData.filter(fam => fam.employee?._id === _id)
+    }
+
     return (
+
         <div className="families-list">
             <div className="families-list-top">
                 <Search placeholder="חיפוש לפי שם משפחה" />
@@ -80,7 +96,14 @@ const FamiliesList = () => {
                             <td>
                                 <Link to={getFilePath(family.tzFile)}>לצילום ת"ז</Link>
                                 <Link to={`/dash/families/${family._id}`} className="families-list-button families-list-view">עדכון</Link>
-
+                                {/* {role === 'מנהל' && <select name="employee" onChange={(event) => handleUpdateFamily(event, family)}> */}
+                                {role === 'מנהל' && <select name="employee" onChange={(event) => handleUpdateFamily(event, family)}>
+                                    <option value="">עדכן נציג</option>
+                                    {employeesObj.data.map(emp => (
+                                        <option key={emp._id} value={emp._id}>{emp.name}</option>
+                                    ))}
+                                </select>
+                                }
                             </td>
                         </tr>)}
                 </tbody>

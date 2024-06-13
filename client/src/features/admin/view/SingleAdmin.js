@@ -2,9 +2,9 @@ import { useGetAllEmployeesQuery, useUpdateEmployeeMutation } from "../employees
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react"
 
-import "./singleEmployee.css"
+import "../../employee/view/singleEmployee.css"
 
-const SingleEmployee = () => {
+const SingleAdmin = () => {
 
     const navigate = useNavigate()
     const { employeeId } = useParams()
@@ -12,7 +12,7 @@ const SingleEmployee = () => {
     const [updateEmployee, { isSuccess: isUpdateSuccess }] = useUpdateEmployeeMutation()
     useEffect(() => {
         if (isUpdateSuccess) {
-            navigate("/dash/employees")
+            navigate("/dash/admins")
         }
     }, [isUpdateSuccess])
 
@@ -29,8 +29,6 @@ const SingleEmployee = () => {
         e.preventDefault()
         const data = new FormData(e.target)
         const objEmployee = Object.fromEntries(data.entries())
-        console.log("oo");
-        console.log(data);
         console.log(objEmployee);
         updateEmployee(objEmployee)
     }
@@ -55,4 +53,4 @@ const SingleEmployee = () => {
     )
 }
 
-export default SingleEmployee
+export default SingleAdmin

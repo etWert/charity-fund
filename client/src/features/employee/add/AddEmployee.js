@@ -26,11 +26,11 @@ const AddEmployee = () => {
                 <input type="password" required name="password" placeholder="סיסמה" />
                 <input type="text" name="phone" placeholder="פלאפון" />
                 <input type="email" name="email" placeholder="אימייל" />
-                <select name="role" /*id="type/role" */>
+                {/* <select name="role"> */}
                     {/* <option value="">בחר תפקיד</option> */}
-                    <option value="נציג">נציג</option>
-                    <option value="מנהל">מנהל</option>
-                </select>
+                    {/* <option value="נציג">נציג</option> */}
+                    {/* <option value="מנהל">מנהל</option> */}
+                {/* </select> */}
                 <button type="submit">שלח</button>
             </form>
 

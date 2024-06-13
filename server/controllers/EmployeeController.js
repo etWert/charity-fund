@@ -1,5 +1,6 @@
 const Employee = require("../models/Employee")
 const bcrypt = require("bcrypt")
+const Family = require("../models/Family")
 const getAllEmployee = async (req, res) => {
     const employee = await Employee.find({}, { password: 0 }).lean()
     if (!employee.length) {
@@ -36,13 +37,15 @@ const addEmployee = async (req, res) => {
     if (!name || !password || !username || (role !== 'נציג' && role !== 'מנהל' && role)) {
         return res.status(400).json({
             error: true,
-            message: "name, username and password are required",
+            message: "name, username and password are required11",
             data: null
         })
     }
     const hashPassword = await bcrypt.hash(password, 10)
-    const duplicate = await Employee.findOne({ username }).lean()
-    if (duplicate) {
+    let duplicate = await Employee.findOne({ username }).lean()
+    if (!duplicate) {
+        duplicate = await Family.findOne({ username }).lean()
+    } if (duplicate) {
         return res.status(409).json({
             error: true,
             message: "duplicate username",
@@ -66,9 +69,8 @@ const addEmployee = async (req, res) => {
 }
 const updateEmployee = async (req, res) => {
 
-    const { id, name, username, password, phone, email, role } = req.body
-
-    if (!id) return res.status(404).send("ID is required")
+    const { _id, name, username, password, phone, email, role } = req.body
+    if (!_id) return res.status(404).send("ID is required")
 
     if (role !== 'נציג' && role !== 'מנהל' && role) {
         return res.status(400).json({
@@ -77,8 +79,8 @@ const updateEmployee = async (req, res) => {
             data: null
         })
     }
-    const employee = await Employee.findById(id).exec()
-
+    const employee = await Employee.findById(_id).exec()
+    console.log(employee)
     if (!employee) {
         return res.status(400).json({
             error: true,
@@ -90,9 +92,6 @@ const updateEmployee = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, 10)
         employee.password = hashPassword
     }
-    else {
-        employee.password = password
-    }
     if (username) {
         const duplicate = await Employee.findOne({ username }).lean()
         if (duplicate && duplicate.username !== employee.username) {
@@ -103,13 +102,11 @@ const updateEmployee = async (req, res) => {
             })
         }
     }
-
-
-    employee.name = name
-    employee.username = username
-    employee.phone = phone
-    employee.email = email
-    employee.role = role
+    employee.name = name ? name : employee.name
+    employee.username = username ? username : employee.username
+    employee.phone = phone ? phone : employee.phone
+    employee.email = email ? email : employee.email
+    employee.role = role ? role : employee.role
 
     const newEmployee = await employee.save()
 
@@ -129,7 +126,7 @@ const deleteEmployee = async (req, res) => {
         })
     }
     const employee = await Employee.findById(id).exec()
-    if(!employee){
+    if (!employee) {
         return res.json({
             error: true,
             message: "no employee found",

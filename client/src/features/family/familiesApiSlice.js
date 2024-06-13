@@ -6,8 +6,6 @@ const familiesApiSlice = apiSlice.injectEndpoints({
             query: () => ({
                 url: "/api/family"
             }),
-
-            //////////////////////////////
             providesTags: ["Families"]
         }),
         addFamily: build.mutation({
@@ -16,7 +14,6 @@ const familiesApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: family
             }),
-            //////////////////////////////
             invalidatesTags: ["Families"]
         }),
         updateFamily: build.mutation({

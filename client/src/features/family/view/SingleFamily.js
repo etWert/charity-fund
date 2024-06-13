@@ -5,7 +5,7 @@ import { useGetAllFamiliesQuery, useUpdateFamilyMutation } from "../familiesApiS
 import "./singleFamily.css"
 
 const SingleFamily = () => {
-    
+
     const navigate = useNavigate()
     const { familyId } = useParams()
     const { data: familiesObj, isError, error, isSuccess, isLoading } = useGetAllFamiliesQuery()
@@ -20,73 +20,121 @@ const SingleFamily = () => {
         return <h1>Loading...</h1>
     if (isError)
         return <h1>{JSON.stringify(error)}</h1>
-        
+
     const family = familiesObj.data.find(fam => fam._id === familyId)
     if (!family)
         return <h1>no found</h1>
-    
+
     const formSubmit = (e) => {
         e.preventDefault()
         const data = new FormData(e.target)
-        // const objFamily = Object.fromEntries(data.entries())
-        updateFamily(data)
+        console.log("p");
+        console.log(data);
+        const objFamily = Object.fromEntries(data.entries())
+        //tzfile children/////////////////
+        const newObjFamily = {
+            id: familyId,
+            name: objFamily.name,
+            username: objFamily.username,
+            password: objFamily.password,
+            address: {
+                street: objFamily.street,
+                neighborhood: objFamily.neighborhood,
+                city: objFamily.city
+            },
+            phone: objFamily.phone,
+            email: objFamily.email,
+            marital_status: objFamily.marital_status,
+            parent1: {
+                first_name: objFamily.first_name1,
+                tz: objFamily.tz1,
+                birth_date: objFamily.birth_date1,
+                phone: objFamily.phone1,
+                occupation: objFamily.occupation1
+            },
+            parent2: {
+                first_name: objFamily.first_name2,
+                tz: objFamily.tz2,
+                birth_date: objFamily.birth_date2,
+                phone: objFamily.phone2,
+                occupation: objFamily.occupation2
+            },
+            child: [
+                {
+                    first_name: objFamily.first_name,
+                    birth_date: objFamily.birth_date,
+                    tuition: objFamily.tuition
+                }
+            ],
+            bank_details: {
+                name: objFamily.name,
+                bank_number: objFamily.bank_number,
+                branch_number: objFamily.branch_number,
+                account_number: objFamily.account_number
+            }
+        }
+        console.log(objFamily);
+        console.log("uuuuuuuuuuuuuuu");
+        console.log(newObjFamily);
+        console.log("uuuuuuuuuuuuuuu");
+        updateFamily(newObjFamily)
     }
 
     return (
         <div className="single-family-container">
             {/* מציג את שם המשפחה וההורים ככותרת ובפורם נותן אפשרות לעדכן */}
             <div className="single-family-info">
-                {`${family.familyName} ${family.husband} ${family.wife}`}
+                {`${family.name} ${family.parent1?.first_name} ${family.parent2?.first_name}`}
             </div>
             <div className="single-family-form-container">
                 <form onSubmit={formSubmit} className="single-family-form">
-                    <input type="text" required name="familyName" placeholder="שם משפחה" />
-                    <input type="text" required name="username" placeholder="שם משתמש" />
-                    <input type="password" required name="password" placeholder="סיסמה" />
-                    <h3>פרטי הבעל</h3>
-                    <input type="text" name="husbandName" placeholder="שם" />
-                    <input type="text" name="husbandTZ" placeholder="ת.ז." />
-                    <input type="date" name="birthDate" placeholder="תאריך לידה" />
-                    <input type="text" name="phone" placeholder="פלאפון" />
-                    <input type="text" name="occupation" placeholder="עיסוק" />
-                    <input type="text" name="workPlace" placeholder="מקום עבודה" />
-                    <h3>פרטי האשה</h3>
-                    <input type="text" name="husbandName" placeholder="שם" />
-                    <input type="text" name="husbandTZ" placeholder="ת.ז." />
-                    <input type="date" name="birthDate" placeholder="תאריך לידה" />
-                    <input type="text" name="phone" placeholder="פלאפון" />
-                    <input type="text" name="occupation" placeholder="עיסוק" />
-                    <input type="text" name="workPlace" placeholder="מקום עבודה" />
+                    <input type="text" defaultValue={family.name} required name="name" placeholder="שם משפחה" />
+                    <input type="text" defaultValue={family.username} required name="username" placeholder="שם משתמש" />
+                    <input type="password" defaultValue={family.password} required name="password" placeholder="סיסמה" />
+                    <label name="parent1">
+                        <h3>פרטי הורה 1</h3>
+                        <input type="text" defaultValue={family.parent1?.first_name} name="first_name1" placeholder="שם" />
+                        <input type="text" defaultValue={family.parent1?.tz} name="tz1" placeholder="ת.ז." />
+                        <input type="date" defaultValue={family.parent1?.birth_date} name="birth_date1" placeholder="תאריך לידה" />
+                        <input type="text" defaultValue={family.parent1?.phone} name="phone1" placeholder="פלאפון" />
+                        <input type="text" defaultValue={family.parent1?.occupation} name="occupation1" placeholder="עיסוק" />
+                    </label>
+                    <label name="parent2">
+                        <h3>פרטי הורה 2</h3>
+                        <input type="text" defaultValue={family.parent2?.first_name} name="first_name2" placeholder="שם" />
+                        <input type="text" defaultValue={family.parent2?.tz} name="tz2" placeholder="ת.ז." />
+                        <input type="date" defaultValue={family.parent2?.birth_date} name="birth_date2" placeholder="תאריך לידה" />
+                        <input type="text" defaultValue={family.parent2?.phone} name="phone2" placeholder="פלאפון" />
+                        <input type="text" defaultValue={family.parent2?.occupation} name="occupation2" placeholder="עיסוק" />
+                    </label>
+                    {/* <button onClick={<AddChild/>}>פלוס </button> */}
+                    <label name="address">
+                        <input type="text" defaultValue={family.address?.street} name="street" placeholder="רחוב" />
+                        <input type="text" defaultValue={family.address?.neighborhood} name="neighborhood" placeholder="שכונה" />
+                        <input type="text" defaultValue={family.address?.city} name="city" placeholder="עיר" />
+                    </label>
+                    <input type="text" defaultValue={family.phone} name="phone" placeholder="טלפון" />
+                    <input type="email" defaultValue={family.email} name="email" placeholder="אימייל" />
 
-                    <input type="text" name="street" placeholder="רחוב" />
-                    <input type="text" name="neighborhood" placeholder="שכונה" />
-                    <input type="text" name="city" placeholder="עיר" />
-                    <input type="text" name="phone" placeholder="טלפון" />
-                    <input type="email" name="email" placeholder="אימייל" />
-
-                    <select required="true" name="maritalStatus">
+                    <select required="true" name="marital_status">
                         <option value="">מצב משפחתי</option>
-                        <option value="נשוי/אה">נשוי/אה</option>
-                        <option value="רווק/ה">רווק/ה</option>
-                        <option value="גרוש/ה">גרוש/ה</option>
-                        <option value="פרוד/ה">פרוד/ה</option>
-                        <option value="אלמן/נה">אלמן/נה</option>
+                        <option selected={family.marital_status ==="נשוי/אה"} value="נשוי/אה">נשוי/אה</option>
+                        <option selected={family.marital_status ==="רווק/ה"} value="רווק/ה">רווק/ה</option>
+                        <option selected={family.marital_status ==="גרוש/ה"} value="גרוש/ה">גרוש/ה</option>
+                        <option selected={family.marital_status ==="פרוד/ה"} value="פרוד/ה">פרוד/ה</option>
+                        <option selected={family.marital_status ==="אלמן/נה"} value="אלמן/נה">אלמן/נה</option>
                     </select>
-
-                    <h3>פרטי בנק</h3>
-                    <input type="text" required="true" name="bankDetails" placeholder="שם בעל החשבון" />
-                    <input type="text" required="true" name="bankNumber" placeholder="מספר בנק" />
-                    <input type="text" required="true" name="branchNumber" placeholder="מספר סניף" />
-                    <input type="text" required="true" name="accountNumber" placeholder="מספר חשבון" />
-                    <h4>נציג</h4>
-                    {family.employee?.name}
-                    <h4>מאושר</h4>
-                    {family.approved}
-                    <h4>ממתין לטיפול</h4>
-                    {family.waiting}
+                    <label name="bank_details">
+                        <h3>פרטי בנק</h3>
+                        <input type="text" defaultValue={family.bank_details?.name} required="true" name="name" placeholder="שם בעל החשבון" />
+                        <input type="text" defaultValue={family.bank_details?.bank_number} required="true" name="bank_number" placeholder="מספר בנק" />
+                        <input type="text" defaultValue={family.bank_details?.branch_number} required="true" name="branch_number" placeholder="מספר סניף" />
+                        <input type="text" defaultValue={family.bank_details?.account_number} required="true" name="account_number" placeholder="מספר חשבון" />
+                    </label>
                     <label>צילום ת"ז</label>
-                    <input type="file" name="tzFile"/>
-                    <button>עדכון</button>
+                    <input type="file" name="tzFile" />
+
+                    <button>שלח</button>
                 </form>
             </div>
         </div>

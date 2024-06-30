@@ -3,16 +3,25 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllFamiliesQuery, useUpdateFamilyMutation } from "../familiesApiSlice"
 
 import "./singleFamily.css"
+import useAuth from "../../../hooks/useAuth";
+import ChangeEmployeeForFamily from "./ChangeEmployeeForFamily";
 
 const SingleFamily = () => {
+    const { role } = useAuth()
 
     const navigate = useNavigate()
     const { familyId } = useParams()
+
     const { data: familiesObj, isError, error, isSuccess, isLoading } = useGetAllFamiliesQuery()
     const [updateFamily, { isSuccess: isUpdateSuccess }] = useUpdateFamilyMutation()
     useEffect(() => {
         if (isUpdateSuccess) {
-            navigate("/dash/families")
+            if (role === "משפחה") {
+                navigate("/dash")
+            }
+            else {
+                navigate("/dash/families")
+            }
         }
     }, [isUpdateSuccess])
 
@@ -31,6 +40,8 @@ const SingleFamily = () => {
         console.log("p");
         console.log(data);
         const objFamily = Object.fromEntries(data.entries())
+
+        console.log(objFamily);
         //tzfile children/////////////////
         const newObjFamily = {
             id: familyId,
@@ -42,6 +53,7 @@ const SingleFamily = () => {
                 neighborhood: objFamily.neighborhood,
                 city: objFamily.city
             },
+            employee: objFamily.employee,
             phone: objFamily.phone,
             email: objFamily.email,
             marital_status: objFamily.marital_status,
@@ -80,6 +92,11 @@ const SingleFamily = () => {
         updateFamily(newObjFamily)
     }
 
+    // const handleUpdateFamily = (event, family) => {
+    //     const employeeId = event.target.value;
+    //     updateFamily({ ...family, id: family._id, employee: employeeId });
+    // };
+
     return (
         <div className="single-family-container">
             {/* מציג את שם המשפחה וההורים ככותרת ובפורם נותן אפשרות לעדכן */}
@@ -90,7 +107,7 @@ const SingleFamily = () => {
                 <form onSubmit={formSubmit} className="single-family-form">
                     <input type="text" defaultValue={family.name} required name="name" placeholder="שם משפחה" />
                     <input type="text" defaultValue={family.username} required name="username" placeholder="שם משתמש" />
-                    <input type="password" defaultValue={family.password} required name="password" placeholder="סיסמה" />
+                    <input type="password" defaultValue={family.password} name="password" placeholder="סיסמה" />
                     <label name="parent1">
                         <h3>פרטי הורה 1</h3>
                         <input type="text" defaultValue={family.parent1?.first_name} name="first_name1" placeholder="שם" />
@@ -118,11 +135,11 @@ const SingleFamily = () => {
 
                     <select required="true" name="marital_status">
                         <option value="">מצב משפחתי</option>
-                        <option selected={family.marital_status ==="נשוי/אה"} value="נשוי/אה">נשוי/אה</option>
-                        <option selected={family.marital_status ==="רווק/ה"} value="רווק/ה">רווק/ה</option>
-                        <option selected={family.marital_status ==="גרוש/ה"} value="גרוש/ה">גרוש/ה</option>
-                        <option selected={family.marital_status ==="פרוד/ה"} value="פרוד/ה">פרוד/ה</option>
-                        <option selected={family.marital_status ==="אלמן/נה"} value="אלמן/נה">אלמן/נה</option>
+                        <option selected={family.marital_status === "נשוי/אה"} value="נשוי/אה">נשוי/אה</option>
+                        <option selected={family.marital_status === "רווק/ה"} value="רווק/ה">רווק/ה</option>
+                        <option selected={family.marital_status === "גרוש/ה"} value="גרוש/ה">גרוש/ה</option>
+                        <option selected={family.marital_status === "פרוד/ה"} value="פרוד/ה">פרוד/ה</option>
+                        <option selected={family.marital_status === "אלמן/נה"} value="אלמן/נה">אלמן/נה</option>
                     </select>
                     <label name="bank_details">
                         <h3>פרטי בנק</h3>
@@ -131,6 +148,8 @@ const SingleFamily = () => {
                         <input type="text" defaultValue={family.bank_details?.branch_number} required="true" name="branch_number" placeholder="מספר סניף" />
                         <input type="text" defaultValue={family.bank_details?.account_number} required="true" name="account_number" placeholder="מספר חשבון" />
                     </label>
+                    {role === 'מנהל' && <ChangeEmployeeForFamily family={family} />
+                    }
                     <label>צילום ת"ז</label>
                     <input type="file" name="tzFile" />
 

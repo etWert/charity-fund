@@ -1,11 +1,15 @@
-import { MdDeselect, MdLogout, MdSearch } from "react-icons/md"
+import { MdChecklist, MdDeselect, MdDesktopWindows, MdFamilyRestroom, MdLogout, MdSearch } from "react-icons/md"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { RxDashboard } from "react-icons/rx";
 
 import "./sidebar.css"
 import MenuLink from "./MenuLink"
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 import useAuth from "../../hooks/useAuth";
+import { IoPerson } from "react-icons/io5";
+import { BsFillPersonVcardFill } from "react-icons/bs";
+import { IoMdSettings } from "react-icons/io";
 
 const SideBar = () => {
 
@@ -22,24 +26,24 @@ const SideBar = () => {
                 {
                     title: "ראשי",
                     path: "/dash",
-                    icon: <MdSearch />,
+                    icon: <RxDashboard />,
                 },
                 {
                     title: "משפחות",
                     path: "/dash/families",
-                    icon: <MdSearch />,
+                    icon: <MdFamilyRestroom />,
                 }, {
                     title: "נציגים",
                     path: "/dash/employees",
-                    icon: <MdSearch />,
+                    icon: <IoPerson />,
                 }, {
                     title: "מנהלים",
                     path: "/dash/admins",
-                    icon: <MdSearch />,
+                    icon: <BsFillPersonVcardFill />,
                 }, {
                     title: "עדכון פרטים אישיים",
                     path: role==="נציג"?`/dash/employees/${_id}`:`/dash/admins/${_id}`,
-                    icon: <MdSearch />,
+                    icon: <MdChecklist />,
                 },
             ]
         },
@@ -49,7 +53,7 @@ const SideBar = () => {
                 {
                     title: "הגדרות",
                     path: "/dash/settings",
-                    icon: <MdSearch />,
+                    icon: <IoMdSettings />,
                 },
                 {
                     title: "עזרה",
@@ -100,11 +104,11 @@ const SideBar = () => {
                 {
                     title: "ראשי",
                     path: "/dash",
-                    icon: <MdSearch />,
+                    icon: <RxDashboard />,
                 }, {
                     title: "עדכון פרטים אישיים",
                     path: `/dash/families/${_id}`,
-                    icon: <MdSearch />,
+                    icon: <MdChecklist />,
                 }
             ]
         },
@@ -114,7 +118,7 @@ const SideBar = () => {
                 {
                     title: "הגדרות",
                     path: "/dash/settings",
-                    icon: <MdSearch />,
+                    icon: <IoMdSettings />,
                 },
                 {
                     title: "עזרה",

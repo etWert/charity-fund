@@ -5,12 +5,17 @@ import Search from "../../../components/search/Search"
 import useGetFilePath from "../../../hooks/useGetFilePath"
 import useAuth from "../../../hooks/useAuth"
 import { useGetAllEmployeesQuery } from "../../employee/employeesApiSlice"
+import { useState } from "react"
 
 const FamiliesList = () => {
     const { role, _id } = useAuth()
-    const { data: employeesObj } = useGetAllEmployeesQuery()
     const { data: familiesObj, isError, error, isLoading } = useGetAllFamiliesQuery()
     const [updateFamily, { isSuccess: isUpdateSuccess }] = useUpdateFamilyMutation()
+
+    // const toggle = (family) => {
+    //     console.log()
+    //     updateFamily({ ...family, id: family._id, waiting: !family.waiting });
+    // };
 
     const [searchParams] = useSearchParams()
     const q = searchParams.get("q")
@@ -21,10 +26,7 @@ const FamiliesList = () => {
     if (isError)
         return <h1>{JSON.stringify(error)}</h1>
 
-    const handleUpdateFamily = (event, family) => {
-        const employeeId = event.target.value;
-        updateFamily({ ...family, employee:employeeId });
-    };
+
 
     //להוסיף תנאים לפילטור (שם הבעל,האשה וכו)
     console.log(familiesObj);
@@ -88,27 +90,25 @@ const FamiliesList = () => {
                                 {family.employee?.name}
                             </td>
                             <td>
-                                {family.waiting ? "✔" : "❓"}
+                                <div className={`toggle-button ${family.waiting ? 'on' : 'off'}`} onClick={()=>{ updateFamily({ ...family, id: family._id, waiting: !family.waiting })}}>
+                                    <div className="toggle-circle">{family.waiting ?  '✔️':'❌' }</div>
+                                </div>
                             </td>
                             <td>
-                                {family.approved ? "✔" : "❓"}
+                            <div className={`toggle-button ${family.approved ? 'on' : 'off'}`} onClick={()=>{ updateFamily({ ...family, id: family._id, approved: !family.approved })}}>
+                                    <div className="toggle-circle">{family.approved ?  '✔️':'❌' }</div>
+                                </div>
                             </td>
                             <td>
                                 <Link to={getFilePath(family.tzFile)}>לצילום ת"ז</Link>
                                 <Link to={`/dash/families/${family._id}`} className="families-list-button families-list-view">עדכון</Link>
                                 {/* {role === 'מנהל' && <select name="employee" onChange={(event) => handleUpdateFamily(event, family)}> */}
-                                {role === 'מנהל' && <select name="employee" onChange={(event) => handleUpdateFamily(event, family)}>
-                                    <option value="">עדכן נציג</option>
-                                    {employeesObj.data.map(emp => (
-                                        <option key={emp._id} value={emp._id}>{emp.name}</option>
-                                    ))}
-                                </select>
-                                }
+
                             </td>
                         </tr>)}
                 </tbody>
             </table>
-        </div>
+        </div >
     )
 }
 

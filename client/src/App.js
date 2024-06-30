@@ -13,6 +13,7 @@ import LoginPage from './features/auth/login/LoginPage';
 import RequireAuth from './features/auth/RequireAuth';
 import PersistLogin from './features/auth/PersistLogin';
 import SingleAdmin from './features/admin/view/SingleAdmin';
+import Main from './components/layout/dash/Main';
 function App() {
   return (
     <Router>
@@ -23,7 +24,10 @@ function App() {
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowRoles={["מנהל", "נציג", "משפחה"]} />}>
               <Route path='/dash' element={<DashLayout />}>
-                <Route index element={<h1>dash</h1>} />
+                <Route index element={<Main/>} />
+                <Route path='families' element={<Outlet />}>
+                  <Route path=':familyId' element={<SingleFamily />} />
+                </Route>
                 <Route element={<RequireAuth allowRoles={["מנהל", "נציג"]} />}>
                   <Route path='admins' element={<Outlet />}>
                     <Route index element={<AdminsList />} />

@@ -24,12 +24,12 @@ const storage = multer.diskStorage({
 
 const upload = multer ({storage :storage})
 router.use(verifyJWT)
-router.use(verifyAdmin)
+//router.use(verifyAdmin)
 
 router.get("/", FamilyController.getAllFamilies)
 router.get("/:id", FamilyController.getFamilyById)
-router.post("/", upload.single("tzFile") ,FamilyController.addFamily)
+router.post("/",verifyAdmin, upload.single("tzFile") ,FamilyController.addFamily)
 router.put("/", upload.single("tzFile") , FamilyController.updateFamily)
-router.delete("/", FamilyController.deleteFamily)
+router.delete("/",verifyAdmin, FamilyController.deleteFamily)
 
 module.exports = router

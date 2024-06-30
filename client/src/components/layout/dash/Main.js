@@ -2,6 +2,7 @@ import { Md3P, MdAccountBox, MdAccountCircle, MdAdd, MdAddPhotoAlternate, MdAddT
 import { BsFillPersonVcardFill, BsPersonSquare } from "react-icons/bs"
 import { IoPerson, IoPersonAdd } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
+import { FaCirclePlus } from "react-icons/fa6";
 
 import useAuth from "../../../hooks/useAuth"
 
@@ -35,9 +36,7 @@ const Main = () => {
         <MdFmdGood />
         <MdFamilyRestroom />
         <MdDesktopWindows />
-
-
-
+        <FaCirclePlus />
         <img src="logoKupa.png" />
         <img src="logoKupa-removebg-preview.png" />
 

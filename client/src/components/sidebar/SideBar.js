@@ -1,4 +1,4 @@
-import { MdChecklist, MdDeselect, MdDesktopWindows, MdFamilyRestroom, MdLogout, MdSearch } from "react-icons/md"
+import { MdChecklist, MdDensitySmall, MdDeselect, MdDesktopWindows, MdFamilyRestroom, MdLogout, MdSearch } from "react-icons/md"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
@@ -14,7 +14,7 @@ import { IoMdSettings } from "react-icons/io";
 const SideBar = () => {
 
 
-    const { username, fullname, role, _id} = useAuth()
+    const { username, name, role, _id } = useAuth()
     const [logout, { isSuccess }] = useSendLogoutMutation()
     const navigate = useNavigate()
 
@@ -42,7 +42,7 @@ const SideBar = () => {
                     icon: <BsFillPersonVcardFill />,
                 }, {
                     title: "עדכון פרטים אישיים",
-                    path: role==="נציג"?`/dash/employees/${_id}`:`/dash/admins/${_id}`,
+                    path: role === "נציג" ? `/dash/employees/${_id}` : `/dash/admins/${_id}`,
                     icon: <MdChecklist />,
                 },
             ]
@@ -56,9 +56,9 @@ const SideBar = () => {
                     icon: <IoMdSettings />,
                 },
                 {
-                    title: "עזרה",
-                    path: "/dash/help",
-                    icon: <MdSearch />,
+                    title: "אודות",
+                    path: "/dash/about",
+                    icon: <MdDensitySmall />,
                 },
             ]
 
@@ -90,7 +90,7 @@ const SideBar = () => {
     //             },
     //             {
     //                 title: "עזרה",
-    //                 path: "/dash/help",
+    //                 path: "/dash/about",
     //                 icon: <MdSearch />,
     //             },
     //         ]
@@ -121,25 +121,23 @@ const SideBar = () => {
                     icon: <IoMdSettings />,
                 },
                 {
-                    title: "עזרה",
-                    path: "/dash/help",
-                    icon: <MdSearch />,
+                    title: "אודות",
+                    path: "/dash/about",
+                    icon: <MdDensitySmall />,
                 },
             ]
-
-
         }]
 
 
 
     const menuItems = role === "מנהל" || role === "נציג" ? employeeMenuItems : familyMenuItems
-  
-        // useEffect(()=>{
-        //     if(isSuccess){
-        //         navigate("/login")
 
-        //     }
-        // },[isSuccess])
+    // useEffect(()=>{
+    //     if(isSuccess){
+    //         navigate("/login")
+
+    //     }
+    // },[isSuccess])
 
     const logoutClick = () => {
         logout()
@@ -149,7 +147,8 @@ const SideBar = () => {
     return <div className="side-bar">
         <div className="side-bar-user">
             <div className="side-bar-user-details">
-                <span className="side-bar-user-fullname">{fullname}</span>
+                {role === "מנהל" ? <BsFillPersonVcardFill /> : role === "נציג" ? <IoPerson /> : <MdFamilyRestroom/>}
+                <span className="side-bar-user-fullname">{name}</span>
                 <span className="side-bar-user-username">{username}</span>
                 <span className="side-bar-user-role">{role}</span>
             </div>

@@ -3,6 +3,8 @@ import { useDeleteEmployeeMutation, useGetAllEmployeesQuery } from "../employees
 import "../../employee/list/EmployeesList.css"
 import Search from "../../../components/search/Search"
 import useAuth from "../../../hooks/useAuth"
+import { MdDeleteOutline } from "react-icons/md"
+import { FaRegPenToSquare } from "react-icons/fa6"
 
 const AdminssList = () => {
     const { role } = useAuth()
@@ -54,8 +56,8 @@ const AdminssList = () => {
                                     {employee.email}
                                 </td>
                                 {role === 'מנהל' && <td>
-                                    <Link to={`/dash/admins/${employee._id}`} className="employees-list-button employees-list-view">עדכון</Link>
-                                    <button onClick={() => { deleteClick(employee) }} className="employees-list-button employees-list-delete">מחיקה</button>
+                                    <Link to={`/dash/admins/${employee._id}`} className="employees-list-button employees-list-view"><FaRegPenToSquare /></Link>
+                                    <button onClick={() => { deleteClick(employee) }} className="employees-list-button employees-list-delete"><MdDeleteOutline/></button>
                                 </td>}
                             </tr>
                         }

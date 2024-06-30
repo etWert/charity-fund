@@ -3,6 +3,8 @@ import { useDeleteEmployeeMutation, useGetAllEmployeesQuery, useUpdateEmployeeMu
 import "./EmployeesList.css"
 import Search from "../../../components/search/Search"
 import useAuth from "../../../hooks/useAuth"
+import { FaCirclePlus, FaRegPenToSquare } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md"
 
 
 const EmployeesList = () => {
@@ -32,7 +34,8 @@ const EmployeesList = () => {
         <div className="employees-list">
             <div className="employees-list-top">
                 <Search placeholder="חיפוש לפי שם נציג" />
-                {role === 'מנהל' && <Link to="/dash/employees/add" className="employees-list-add-button">הוספת נציג</Link>}
+                {role === 'מנהל' && <Link to="/dash/employees/add" className="employees-list-add-button"><FaCirclePlus />
+                </Link>}
             </div>
             <table className="employees-list-table">
                 <thead>
@@ -58,8 +61,8 @@ const EmployeesList = () => {
                                     {employee.email}
                                 </td>
                                 {role === 'מנהל' && <td>
-                                    <Link to={`/dash/employees/${employee._id}`} className="employees-list-button employees-list-view">עדכון</Link>
-                                    <button onClick={() => { deleteClick(employee) }} className="employees-list-button employees-list-delete">מחיקה</button>
+                                    <Link to={`/dash/employees/${employee._id}`} className="employees-list-button employees-list-view"><FaRegPenToSquare /></Link>
+                                    <button onClick={() => { deleteClick(employee) }} className="employees-list-button employees-list-delete"><MdDeleteOutline/></button>
                                     <button onClick={() => { updateEmployee({ ...employee, role: "מנהל" }) }} className="employees-list-button employees-list-delete">הפוך למנהל</button>
                                 </td>}
                             </tr>

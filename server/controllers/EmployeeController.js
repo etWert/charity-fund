@@ -80,7 +80,7 @@ const updateEmployee = async (req, res) => {
         })
     }
     const employee = await Employee.findById(_id).exec()
-    console.log(employee)
+
     if (!employee) {
         return res.status(400).json({
             error: true,

@@ -8,7 +8,7 @@ const ChildSchema = new mongoose.Schema({
         type: Date,
         requierd: true
     },
-    birth_date: {
+    tuition: {
         type: Number,
     }
 }, {

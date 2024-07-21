@@ -9,7 +9,7 @@ import { MdDeleteOutline } from "react-icons/md"
 
 const EmployeesList = () => {
 
-    const { role } = useAuth()
+    const { role ,_id} = useAuth()
 
     const { data: employeesObj, isError, error, isLoading, isSuccess } = useGetAllEmployeesQuery()
     const [updateEmployee, { isSuccess: isUpdateSuccess }] = useUpdateEmployeeMutation()
@@ -43,11 +43,12 @@ const EmployeesList = () => {
                         <td>שם העובד</td>
                         <td>פלאפון</td>
                         <td>אימייל</td>
+                        <td>מס משפחות שלי</td>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredData?.map(employee => {
-                        if (employee.role == 'נציג') {
+                        if (employee.role == 'נציג' && employee._id != _id) {
                             return <tr key={employee._id}>
                                 <td>
                                     <div className="employees-list-employee">

@@ -7,7 +7,7 @@ import { MdDeleteOutline } from "react-icons/md"
 import { FaRegPenToSquare } from "react-icons/fa6"
 
 const AdminssList = () => {
-    const { role } = useAuth()
+    const { role , _id } = useAuth()
 
     const { data: employeesObj, isError, error, isLoading, isSuccess } = useGetAllEmployeesQuery()
     const [deleteEmployee, { isSuccess: isDeleteSuccess, isError: isDeleteEror }] = useDeleteEmployeeMutation()
@@ -42,7 +42,7 @@ const AdminssList = () => {
                 </thead>
                 <tbody>
                     {filteredData?.map(employee => {
-                        if (employee.role == 'מנהל') {
+                        if (employee.role == 'מנהל' && employee._id != _id) {
                             return <tr key={employee._id}>
                                 <td>
                                     <div className="employees-list-employee">

@@ -15,7 +15,6 @@ const AddEmployee = () => {
         e.preventDefault()
         const data = new FormData(e.target)
         const objEmployee = Object.fromEntries(data.entries())
-        console.log(objEmployee);
         addEmployee(objEmployee)
     }
     return (

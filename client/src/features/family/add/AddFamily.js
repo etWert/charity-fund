@@ -1,12 +1,16 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAddFamilyMutation } from "../familiesApiSlice"
-import AddChild from "../AddChild"
 import "./addFamily.css"
 
 const AddFamily = () => {
-
     const [addFamily, { data, isError, error, isSuccess, isLoading }] = useAddFamilyMutation()
+    const [firstName, setfirst_name] = useState("")
+    const [birthDate, setbirth_date] = useState("")
+    const [tuitionS, settuition] = useState("")
+    const [a, setA] = useState(false)
+    const [chi, setChi] = useState([])
+
     const navigate = useNavigate()
     useEffect(() => {
         if (isSuccess) {
@@ -14,13 +18,24 @@ const AddFamily = () => {
         }
     }, [isSuccess])
 
+
+
+    const formSubmitChaild = () => {
+        setA(false)
+        const objChild = {
+            first_name: firstName,
+            birth_date: birthDate,
+            tuition: tuitionS
+        }
+        setChi(prevChai => [...prevChai, objChild]);
+    }
+
+
     const formSubmit = (e) => {
         e.preventDefault()
         const data = new FormData(e.target)
         const objFamily = Object.fromEntries(data.entries())
 
-
-        //tzfile children/////////////////
         const newObjFamily = {
             name: objFamily.name,
             username: objFamily.username,
@@ -47,21 +62,14 @@ const AddFamily = () => {
                 phone: objFamily.phone2,
                 occupation: objFamily.occupation2
             },
-            child: [
-                {
-                    first_name: objFamily.first_name,
-                    birth_date: objFamily.birth_date,
-                    tuition: objFamily.tuition
-                }
-            ],
+            child: chi,
             bank_details: {
                 name: objFamily.name,
                 bank_number: objFamily.bank_number,
                 branch_number: objFamily.branch_number,
                 account_number: objFamily.account_number
-            }
+            },
         }
-        console.log(newObjFamily);
 
         addFamily(newObjFamily)
     }
@@ -88,7 +96,26 @@ const AddFamily = () => {
                     <input type="text" name="phone2" placeholder="פלאפון" />
                     <input type="text" name="occupation2" placeholder="עיסוק" />
                 </label>
-                {/* <button onClick={<AddChild/>}>פלוס </button> */}
+                <h3>ילדים</h3> 
+                <button type="button" onClick={() => { setA(true) }} >פלוס </button>
+
+                {chi?.map((c, index) => (
+                    <label key={index} name="child">
+                        <input type="text" defaultValue={c.first_name} name="first_name" placeholder="שם" onChange={(e) => { setfirst_name(e.target.value) }} />
+                        <input type="date" defaultValue={c.birth_date} name="birth_date" placeholder="תאריך לידה" onChange={(e) => { setbirth_date(e.target.value) }} />
+                        <input type="text" defaultValue={c.tuition} name="tuition" placeholder="עלות שכר לימוד" onChange={(e) => { settuition(e.target.value) }} />
+                    </label>
+                ))}
+                {a && <form className="add-family-form">
+
+                    <label name="child">
+                        <input type="text" name="first_name" placeholder="שם" onChange={(e) => { setfirst_name(e.target.value) }} />
+                        <input type="date" name="birth_date" placeholder="תאריך לידה" onChange={(e) => { setbirth_date(e.target.value) }} />
+                        <input type="text" name="tuition" placeholder="עלות שכר לימוד" onChange={(e) => { settuition(e.target.value) }} />
+                    </label>
+                    <button type="button" onClick={formSubmitChaild}>הוסף</button>
+                </form>}
+
                 <label name="address">
                     <input type="text" name="street" placeholder="רחוב" />
                     <input type="text" name="neighborhood" placeholder="שכונה" />
@@ -112,8 +139,6 @@ const AddFamily = () => {
                     <input type="text" required="true" name="branch_number" placeholder="מספר סניף" />
                     <input type="text" required="true" name="account_number" placeholder="מספר חשבון" />
                 </label>
-                <label>צילום ת"ז</label>
-                <input type="file" name="tzFile" />
 
                 <button type="submit">שלח</button>
             </form>

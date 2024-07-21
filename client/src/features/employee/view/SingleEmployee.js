@@ -29,9 +29,6 @@ const SingleEmployee = () => {
         e.preventDefault()
         const data = new FormData(e.target)
         const objEmployee = Object.fromEntries(data.entries())
-        console.log("oo");
-        console.log(data);
-        console.log(objEmployee);
         updateEmployee(objEmployee)
     }
     return (
@@ -44,10 +41,14 @@ const SingleEmployee = () => {
                     <input name="_id" defaultValue={employee._id} type="hidden" />
                     <label>שם עובד</label>
                     <input defaultValue={employee.name} type="text" name="name" placeholder="הכנס שם עובד"></input>
-                    <select name="role" /*id="type/role" */>
-                        <option selected={employee.role === 'מנהל'} value="מנהל">מנהל</option>
-                        <option selected={employee.role === 'נציג'} value="נציג">נציג</option>
-                    </select>
+                    <label>שם משתמש</label>
+                    <input defaultValue={employee.username} type="text" name="username" placeholder="הכנס שם משתמש"></input>
+                    <label>סיסמה</label>
+                    <input defaultValue={employee.password} type="password" name="password" placeholder="הכנס סיסמה"></input>
+                    <label>פלאפון</label>
+                    <input defaultValue={employee.phone} type="text" name="phone" placeholder="הכנס פלאפון"></input>
+                    <label>אימייל</label>
+                    <input defaultValue={employee.email} type="email" name="email" placeholder="הכנס אימייל"></input>
                     <button>עדכון</button>
                 </form>
             </div>

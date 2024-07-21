@@ -31,8 +31,23 @@ const familiesApiSlice = apiSlice.injectEndpoints({
                 body: { _id }
             }),
             invalidatesTags: ["Families"]
-        })
+        }),
+        updateTzFile: build.mutation({
+            query: ({ id, tzFile }) => {
+                const formData = new FormData();
+                formData.append("tzFile", tzFile);
+                return {
+                    url: `/api/family/${id}`,
+                    method: "PUT",
+                    body: formData
+                };
+            },
+            invalidatesTags: ["Families"]
+        }),
+        
+        
+        
     })
 
 })
-export const { useGetAllFamiliesQuery, useAddFamilyMutation, useUpdateFamilyMutation, useDeleteFamilyMutation } = familiesApiSlice
+export const { useGetAllFamiliesQuery, useAddFamilyMutation, useUpdateFamilyMutation, useDeleteFamilyMutation ,useUpdateTzFileMutation} = familiesApiSlice

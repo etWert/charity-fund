@@ -14,6 +14,11 @@ import RequireAuth from './features/auth/RequireAuth';
 import PersistLogin from './features/auth/PersistLogin';
 import SingleAdmin from './features/admin/view/SingleAdmin';
 import Main from './components/layout/dash/Main';
+import FamilyStatus from './features/family/status/FamilyStatus';
+import EmploeeDetails from './features/family/emploeeDetails/EmploeeDetails'
+import Settings from './features/settings/Settings';
+import About from './features/about/About'
+import RegisterPage from './features/auth/register/RegisterPage'
 function App() {
   return (
     <Router>
@@ -21,13 +26,19 @@ function App() {
         <Route path='/' element={<SiteLayout />}>
           <Route index element={<h1>site</h1>} />
           <Route path='/login' element={<LoginPage />} />
+          <Route path='/register' element={<RegisterPage />} />
           <Route element={<PersistLogin />}>
+
             <Route element={<RequireAuth allowRoles={["מנהל", "נציג", "משפחה"]} />}>
               <Route path='/dash' element={<DashLayout />}>
-                <Route index element={<Main/>} />
+                <Route index element={<Main />} />
                 <Route path='families' element={<Outlet />}>
                   <Route path=':familyId' element={<SingleFamily />} />
+                  <Route path='status' element={< FamilyStatus />} />
+                  <Route path='emploeeDetails' element={<EmploeeDetails />} />
                 </Route>
+                <Route path='settings' element={< Settings />} />
+                <Route path='about' element={<About />} />
                 <Route element={<RequireAuth allowRoles={["מנהל", "נציג"]} />}>
                   <Route path='admins' element={<Outlet />}>
                     <Route index element={<AdminsList />} />

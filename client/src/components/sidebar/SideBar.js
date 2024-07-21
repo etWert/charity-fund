@@ -1,5 +1,4 @@
 import { MdChecklist, MdDensitySmall, MdDeselect, MdDesktopWindows, MdFamilyRestroom, MdLogout, MdSearch } from "react-icons/md"
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 
@@ -64,39 +63,7 @@ const SideBar = () => {
 
 
         }]
-    // const employeeMenuItems = [
-    //     {
-    //         title: "דפים",
-    //         list: [
-    //             {
-    //                 title: "ראשי",
-    //                 path: "/dash",
-    //                 icon: <MdSearch />,
-    //             },
-    //             {
-    //                 title: "משפחות",
-    //                 path: "/dash/families",
-    //                 icon: <MdSearch />,
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         title: "משתמשים",
-    //         list: [
-    //             {
-    //                 title: "הגדרות",
-    //                 path: "/dash/settings",
-    //                 icon: <MdSearch />,
-    //             },
-    //             {
-    //                 title: "עזרה",
-    //                 path: "/dash/about",
-    //                 icon: <MdSearch />,
-    //             },
-    //         ]
-
-
-    //     }]
+ 
     const familyMenuItems = [
         {
             title: "דפים",
@@ -109,6 +76,14 @@ const SideBar = () => {
                     title: "עדכון פרטים אישיים",
                     path: `/dash/families/${_id}`,
                     icon: <MdChecklist />,
+                }, {
+                    title: "סטטוס",
+                    path: `/dash/families/status`,
+                    icon: <MdChecklist />,
+                }, {
+                    title: "פרטי נציג",
+                    path: `/dash/families/emploeeDetails`,
+                    icon: <IoPerson />,
                 }
             ]
         },

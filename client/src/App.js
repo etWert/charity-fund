@@ -24,7 +24,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<SiteLayout />}>
-          <Route index element={<h1>site</h1>} />
+          <Route index element={<LoginPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
           <Route element={<PersistLogin />}>

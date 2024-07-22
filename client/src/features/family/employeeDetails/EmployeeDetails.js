@@ -1,10 +1,10 @@
 import useAuth from "../../../hooks/useAuth";
 import { useGetAllFamiliesQuery } from "../familiesApiSlice";
 import { MdAlternateEmail, MdCall } from "react-icons/md";
-import './emploeeDetails.css';
+import './employeeDetails.css';
 import { SiGmail } from "react-icons/si";
 
-const EmploeeDetails = () => {
+const EmployeeDetails = () => {
     const { _id } = useAuth();
     const { data: familiesObj, isError, error, isLoading } = useGetAllFamiliesQuery();
 
@@ -42,4 +42,4 @@ const EmploeeDetails = () => {
     );
 };
 
-export default EmploeeDetails;
+export default EmployeeDetails;

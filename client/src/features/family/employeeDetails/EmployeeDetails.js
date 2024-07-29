@@ -14,7 +14,7 @@ const EmployeeDetails = () => {
         return <h1>{JSON.stringify(error)}</h1>;
 
     const family = familiesObj?.data?.find(fam => fam._id === _id);
-
+    
     if (!family)
         return <h1>No family found</h1>;
 
@@ -22,7 +22,7 @@ const EmployeeDetails = () => {
         <div className="employee-details-container">
             <h1 className="employee-details-title">שלום משפחת {family.name}</h1>
             <div className="employee-details-content">
-                <p>הנציג שלכם: <strong>{family.employee?.name}</strong></p>
+                {family.employee ? <div><p>הנציג שלכם: <strong>{family.employee?.name}</strong></p>
                 <p>ילווה אתכם ויתמוך בכם בכל מצב -בזמני שמחה ובזמני קושי.</p>
                 <p>אל תהססו לפנות לנציג שלכם בכל שאלה או בקשה. הוא כאן כדי לעזור לכם.</p>
 
@@ -36,7 +36,7 @@ const EmployeeDetails = () => {
                     <a href={`tel:${family.employee?.phone}`} className="contact-link">
                         <MdCall title={family.employee?.phone} className="contact-icon" /> פלאפון: {family.employee?.phone}
                     </a>
-                </p>
+                </p></div>:<p>עדיין אין לכם נציג</p>}
             </div>
         </div>
     );

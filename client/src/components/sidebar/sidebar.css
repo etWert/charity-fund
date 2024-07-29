@@ -1,12 +1,13 @@
 .side-bar{
     position: sticky;
-    top: 0;
+    top: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color:var(--bgSoft);
     padding: 20px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+
 }
 
 .side-bar-user{
@@ -64,8 +65,6 @@
     background: none;
     border:none;
     color:var(--text);
-    width: 100%;
-    transition: background-color 0.3s;
     text-align: center;
 }
 
@@ -76,3 +75,10 @@
 .title{
     color: var(--text);
 }
+
+.side-bar-menu-link.active {
+    background-color: var(--bgSoft);
+    color: var(--textSoft);
+    border-bottom: solid var(--text) 2px;
+}
+

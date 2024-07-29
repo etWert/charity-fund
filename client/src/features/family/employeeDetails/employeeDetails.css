@@ -17,7 +17,6 @@
 
 h2{
     font-weight: bold;
-    color:var(--textSoft);   
 }
 .employee-details-content {
     font-size: 16px;
@@ -31,11 +30,11 @@ h2{
 
 .contact-link {
     text-decoration: none;
-    color:var(--textSoft);
+    color:var(--text);
 }
 
 .contact-icon {
     margin-right: 5px;
     vertical-align: middle;
-    color:var(--textSoft);
+    color:var(--text);
 }
